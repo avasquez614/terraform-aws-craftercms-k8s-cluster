@@ -52,7 +52,7 @@ variable "eks_worker_groups" {
       asg_min_size         = 1
       asg_desired_capacity = 1
       asg_max_size         = 2
-      root_volume_size     = 50
+      root_volume_size     = 20
       kubelet_extra_args   = "--node-labels=env=authoring"
     },
     {
@@ -61,7 +61,7 @@ variable "eks_worker_groups" {
       asg_min_size         = 1
       asg_desired_capacity = 1
       asg_max_size         = 6
-      root_volume_size     = 50
+      root_volume_size     = 20
       kubelet_extra_args   = "--node-labels=env=delivery"
     }
   ]
