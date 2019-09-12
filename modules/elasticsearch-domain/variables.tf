@@ -66,6 +66,6 @@ variable "ebs_volume_type" {
 
 variable "ebs_volume_size" {
   description = "The size of EBS volumes attached to data nodes (in GB)"
-  default     = 100
+  default     = 20
   type        = number
 }

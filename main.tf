@@ -41,6 +41,6 @@ module "db" {
   region          = local.region
   vpc_id          = module.eks.vpc_id
   subnet_ids      = module.eks.vpc_private_subnets
-  master_username = "dbadmin"
-  master_password = "Odf4cBeds_"
+  master_username = "example_user"
+  master_password = "example_password"
 }
