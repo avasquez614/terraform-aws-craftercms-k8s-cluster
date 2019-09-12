@@ -52,13 +52,13 @@ variable "backup_retention_period" {
 
 variable "preferred_backup_window" {
   description = "The daily time range during which automated backups are created (if db_backup_retention_period > 0), in UTC"
-  default     = "09:00-11:00"
+  default     = "05:00-07:00"
   type        = string
 }
 
 variable "preferred_maintenance_window" {
   description = "The weekly time range during which DB system maintenance can occur, in UTC"
-  default     = "sun:07:00-sun:07:30"
+  default     = "sun:08:00-sun:08:30"
   type        = string
 }
 
