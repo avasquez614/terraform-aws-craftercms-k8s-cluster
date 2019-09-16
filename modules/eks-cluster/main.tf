@@ -66,19 +66,9 @@ module "vpc" {
 #------------------------------------------------------------------------
 # EKS Cluster
 #------------------------------------------------------------------------
-module "eks" {
-  source                = "terraform-aws-modules/eks/aws"
-  cluster_name          = local.cluster_name
-  subnets               = module.vpc.private_subnets
-  vpc_id                = module.vpc.vpc_id
-  write_aws_auth_config = false
-  write_kubeconfig      = false
-  worker_groups         = var.eks_worker_groups
-}
-
 resource "aws_iam_policy" "ingress_policy" {
   name        = "ALBIngressControllerPolicy"
-  description = "Policy for ALB Ingress Controller"
+  description = "Policy ALB Ingress Controller"
 
   policy = <<EOF
 {
@@ -195,7 +185,13 @@ resource "aws_iam_policy" "ingress_policy" {
 EOF
 }
 
-resource "aws_iam_role_policy_attachment" "ingress_policy_attach" {
-  role       = module.eks.worker_iam_role_name
-  policy_arn = aws_iam_policy.ingress_policy.arn
+module "eks" {
+  source                      = "terraform-aws-modules/eks/aws"
+  cluster_name                = local.cluster_name
+  subnets                     = module.vpc.private_subnets
+  vpc_id                      = module.vpc.vpc_id
+  write_aws_auth_config       = false
+  write_kubeconfig            = false
+  worker_groups               = var.eks_worker_groups
+  workers_additional_policies = [aws_iam_policy.ingress_policy.arn]
 }
