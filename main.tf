@@ -22,11 +22,13 @@
 
 locals {
   region = "us-east-1"
+  azs = ["us-east-1a", "us-east-1b"]
 }
 
 module "eks" {
   source = "./modules/eks-cluster"
   region = local.region
+  azs    = local.azs
 }
 
 module "es" {
@@ -39,6 +41,7 @@ module "es" {
 module "db" {
   source          = "./modules/aurora-serverless-db"
   region          = local.region
+  azs             = local.azs
   vpc_id          = module.eks.vpc_id
   subnet_ids      = module.eks.vpc_private_subnets
   master_username = "example_user"
