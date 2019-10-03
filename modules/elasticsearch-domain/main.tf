@@ -42,7 +42,7 @@ locals {
 #------------------------------------------------------------------------
 resource "aws_security_group" "es_sg" {
   name        = "${local.es_domain_name}-es-sg"
-  description = "Allows access to Elasticsearch"
+  description = "Allows access to ${local.es_domain_name}"
   vpc_id      = var.vpc_id
 
   ingress {

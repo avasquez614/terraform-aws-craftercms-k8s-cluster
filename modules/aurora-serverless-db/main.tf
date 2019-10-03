@@ -41,8 +41,8 @@ locals {
 # AWS RDS Security Group
 #------------------------------------------------------------------------
 resource "aws_security_group" "rds_sg" {
-  name        = "${var.resource_name_prefix}-aurora-rds-sg"
-  description = "Allows access to Aurora RDS"
+  name        = "${local.rds_instance_name}-sg"
+  description = "Allows access to ${local.rds_instance_name}"
   vpc_id      = var.vpc_id
 
   ingress {
@@ -64,7 +64,8 @@ resource "aws_security_group" "rds_sg" {
 # AWS RDS DB
 #------------------------------------------------------------------------
 resource "aws_db_subnet_group" "db_subnet_group" {
-  name       = "${var.resource_name_prefix}-db-subnet-group"
+  name       = "${local.rds_instance_name}-subnet-group"
+  description = "DB Subnet Group for ${local.rds_instance_name}"
   subnet_ids = var.subnet_ids
 }
 
