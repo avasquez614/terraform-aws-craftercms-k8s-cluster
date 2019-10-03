@@ -53,7 +53,7 @@ variable "eks_worker_groups" {
       asg_desired_capacity = 1
       asg_max_size         = 2
       root_volume_size     = 20
-      kubelet_extra_args   = "--node-labels=env=authoring"
+      kubelet_extra_args   = "--node-labels=node-type=authoring"
     },
     {
       name                 = "delivery-worker-group"
@@ -62,7 +62,7 @@ variable "eks_worker_groups" {
       asg_desired_capacity = 1
       asg_max_size         = 6
       root_volume_size     = 20
-      kubelet_extra_args   = "--node-labels=env=delivery"
+      kubelet_extra_args   = "--node-labels=node-type=delivery"
     }
   ]
 }

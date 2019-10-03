@@ -34,6 +34,12 @@ variable "subnet_ids" {
   type        = list(string)
 }
 
+variable "es_instance_name" {
+  description = "The name of the Elasticsearch instance (which will be prepended with the resource_name_prefix)"
+  default     = "es"
+  type        = string
+}
+
 variable "es_version" {
   description = "Elasticsearch version"
   default     = "6.7"

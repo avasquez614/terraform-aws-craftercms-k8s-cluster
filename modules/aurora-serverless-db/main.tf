@@ -37,7 +37,7 @@ data "aws_subnet" "subnet" {
 # Local Variables
 #------------------------------------------------------------------------
 locals {
-  rds_instance_name = "${var.resource_name_prefix}-db"
+  rds_instance_name = "${var.resource_name_prefix}-${var.cluster_name}"
   azs = data.aws_availability_zones.available.names
 }
 
@@ -45,8 +45,8 @@ locals {
 # AWS RDS Security Group
 #------------------------------------------------------------------------
 resource "aws_security_group" "rds_sg" {
-  name        = "${local.rds_instance_name}-sg"
-  description = "RDS security group"
+  name        = "${var.resource_name_prefix}-aurora-rds-sg"
+  description = "Allows access to Aurora RDS"
   vpc_id      = var.vpc_id
 
   ingress {
@@ -68,7 +68,7 @@ resource "aws_security_group" "rds_sg" {
 # AWS RDS DB
 #------------------------------------------------------------------------
 resource "aws_db_subnet_group" "db_subnet_group" {
-  name       = "main"
+  name       = "${var.resource_name_prefix}-db-subnet-group"
   subnet_ids = var.subnet_ids
 }
 

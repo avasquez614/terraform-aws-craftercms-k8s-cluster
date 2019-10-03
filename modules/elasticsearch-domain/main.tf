@@ -34,15 +34,15 @@ data "aws_subnet" "subnet" {
 # Local Variables
 #------------------------------------------------------------------------
 locals {
-  es_domain_name    = "${var.resource_name_prefix}-es"
+  es_domain_name    = "${var.resource_name_prefix}-${var.es_instance_name}"
 }
 
 #------------------------------------------------------------------------
 # Elasticsearch Security Group
 #------------------------------------------------------------------------
 resource "aws_security_group" "es_sg" {
-  name        = "${local.es_domain_name}-sg"
-  description = "Elasticsearch security group"
+  name        = "${local.es_domain_name}-es-sg"
+  description = "Allows access to Elasticsearch"
   vpc_id      = var.vpc_id
 
   ingress {

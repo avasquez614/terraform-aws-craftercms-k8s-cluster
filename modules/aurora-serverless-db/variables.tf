@@ -34,6 +34,12 @@ variable "subnet_ids" {
   type        = list(string)
 }
 
+variable "cluster_name" {
+  description = "The name of the Aurora serverless cluster (which will be prepended with the resource_name_prefix)"
+  default     = "db"
+  type        = string
+}
+
 variable "master_username" {
   description = "Username for the master DB user"
   type        = string
