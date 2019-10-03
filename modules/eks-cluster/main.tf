@@ -22,16 +22,12 @@ provider "aws" {
   region  = var.region
 }
 
-data "aws_availability_zones" "available" {
-}
-
 #------------------------------------------------------------------------
 # Local Variables
 #------------------------------------------------------------------------
 locals {
   vpc_name          = "${var.resource_name_prefix}-vpc"
   cluster_name      = "${var.resource_name_prefix}-cluster"
-  azs               = data.aws_availability_zones.available.names
 }
 
 #------------------------------------------------------------------------
@@ -42,7 +38,7 @@ module "vpc" {
   version            = "2.6.0"
   name               = local.vpc_name
   cidr               = var.vpc_cidr
-  azs                = local.azs
+  azs                = var.azs
   private_subnets    = var.vpc_private_subnets
   public_subnets     = var.vpc_public_subnets
   enable_nat_gateway = true

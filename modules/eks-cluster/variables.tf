@@ -24,6 +24,11 @@ variable "region" {
   type        = string
 }
 
+variable "azs" {
+  description = "The availability zones where the infraestructure will be located"
+  type        = list(string)
+}
+
 variable "vpc_cidr" {
   description = "The CIDR block for the cloud VPC"
   default     = "10.0.0.0/16"

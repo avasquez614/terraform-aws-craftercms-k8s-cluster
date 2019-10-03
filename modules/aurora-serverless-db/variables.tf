@@ -24,6 +24,11 @@ variable "region" {
   type        = string
 }
 
+variable "azs" {
+  description = "The availability zones where the infraestructure will be located"
+  type        = list(string)
+}
+
 variable "vpc_id" {
   description = "The ID of the VPC where the DB cluster will be created"
   type        = string

@@ -25,9 +25,6 @@ provider "aws" {
 data "aws_caller_identity" "current" {
 }
 
-data "aws_availability_zones" "available" {
-}
-
 data "aws_subnet" "subnet" {
   count = length(var.subnet_ids)
   id    = var.subnet_ids[count.index]
@@ -38,7 +35,6 @@ data "aws_subnet" "subnet" {
 #------------------------------------------------------------------------
 locals {
   rds_instance_name = "${var.resource_name_prefix}-${var.cluster_name}"
-  azs = data.aws_availability_zones.available.names
 }
 
 #------------------------------------------------------------------------
@@ -74,7 +70,7 @@ resource "aws_db_subnet_group" "db_subnet_group" {
 
 resource "aws_rds_cluster" "db" {
   cluster_identifier              = local.rds_instance_name
-  availability_zones              = length(local.azs) > 3 ? slice(local.azs, 0, 3) : local.azs
+  availability_zones              = var.azs
   engine                          = "aurora"
   engine_mode                     = "serverless"
   master_username                 = var.master_username
