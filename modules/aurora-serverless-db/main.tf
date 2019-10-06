@@ -66,7 +66,7 @@ resource "aws_security_group" "rds_sg" {
 resource "aws_db_subnet_group" "db_subnet_group" {
   name       = "${local.rds_instance_name}-subnet-group"
   description = "DB Subnet Group for ${local.rds_instance_name}"
-  subnet_ids = var.subnet_ids
+  subnet_ids  = var.subnet_ids
 }
 
 resource "aws_rds_cluster" "db" {

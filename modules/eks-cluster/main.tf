@@ -31,40 +31,11 @@ locals {
 }
 
 #------------------------------------------------------------------------
-# VPC
+# EKS Worker Policies
 #------------------------------------------------------------------------
-module "vpc" {
-  source             = "terraform-aws-modules/vpc/aws"
-  version            = "2.6.0"
-  name               = local.vpc_name
-  cidr               = var.vpc_cidr
-  azs                = var.azs
-  private_subnets    = var.vpc_private_subnets
-  public_subnets     = var.vpc_public_subnets
-  enable_nat_gateway = true
-  single_nat_gateway = true
-
-  tags = {
-    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
-  }
-
-  public_subnet_tags = {
-    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
-    "kubernetes.io/role/elb"                      = "1"
-  }
-
-  private_subnet_tags = {
-    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
-    "kubernetes.io/role/internal-elb"             = "1"
-  }
-}
-
-#------------------------------------------------------------------------
-# EKS Cluster
-#------------------------------------------------------------------------
-resource "aws_iam_policy" "ingress_policy" {
-  name        = "ALBIngressControllerPolicy"
-  description = "Policy ALB Ingress Controller"
+resource "aws_iam_policy" "alb_ingress_policy" {
+  name        = "EKSWorkerALBIngressControllerPolicy"
+  description = "EKS Worker policy for the ALB Ingress Controller"
 
   policy = <<EOF
 {
@@ -181,13 +152,42 @@ resource "aws_iam_policy" "ingress_policy" {
 EOF
 }
 
+resource "aws_iam_policy" "cluster_autoscaler" {
+  name        = "EKSWorkerClusterAutoscalerPolicy"
+  description = "EKS Worker policy for the Cluster Autoscaler"
+
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "autoscaling:DescribeAutoScalingGroups",
+                "autoscaling:DescribeAutoScalingInstances",
+                "autoscaling:DescribeLaunchConfigurations",
+                "autoscaling:DescribeTags",
+                "autoscaling:SetDesiredCapacity",
+                "autoscaling:TerminateInstanceInAutoScalingGroup"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+EOF
+}
+
+#------------------------------------------------------------------------
+# EKS Cluster
+#------------------------------------------------------------------------
 module "eks" {
   source                      = "terraform-aws-modules/eks/aws"
+  cluster_version             = var.cluster_version
   cluster_name                = local.cluster_name
-  subnets                     = module.vpc.private_subnets
-  vpc_id                      = module.vpc.vpc_id
+  subnets                     = var.subnet_ids
+  vpc_id                      = var.vpc_id
   write_aws_auth_config       = false
   write_kubeconfig            = false
-  worker_groups               = var.eks_worker_groups
-  workers_additional_policies = [aws_iam_policy.ingress_policy.arn]
+  worker_groups               = var.worker_groups
+  workers_additional_policies = [aws_iam_policy.alb_ingress_policy.arn, aws_iam_policy.cluster_autoscaler.arn, "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"]
 }

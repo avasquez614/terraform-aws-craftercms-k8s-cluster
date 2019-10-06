@@ -13,7 +13,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-output "cluster_endpoint" {
-  description = "Endpoint for EKS Kubernetes API"
-  value       = module.eks.cluster_endpoint
+output "vpc_id" {
+  description = "The ID of the cluster VPC"
+  value       = module.vpc.vpc_id
+}
+
+output "vpc_private_subnets" {
+  description = "The private subnets of the cluster VPC"
+  value       = module.vpc.private_subnets
+}
+
+output "vpc_public_subnets" {
+  description = "The public subnets of the cluster VPC"
+  value       = module.vpc.public_subnets
 }

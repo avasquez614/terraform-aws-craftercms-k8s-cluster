@@ -74,8 +74,8 @@ variable "preferred_maintenance_window" {
 }
 
 variable "skip_final_snapshot" {
-  description = "Whether a final DB snapshot is created before the DB is deleted"
-  default     = true
+  description = "Whether the final DB snapshot is skipped before the DB is deleted"
+  default     = false
   type        = bool
 }
 

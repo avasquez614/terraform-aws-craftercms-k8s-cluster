@@ -24,24 +24,25 @@ variable "region" {
   type        = string
 }
 
-variable "subnet_ids" {
-  description = "List of subnet IDs to place the EKS cluster and workers within."
+variable "azs" {
+  description = "The availability zones where the infraestructure will be located"
   type        = list(string)
 }
 
-variable "vpc_id" {
-  description = "VPC where the cluster and workers will be deployed."
+variable "vpc_cidr" {
+  description = "The CIDR block for the cloud VPC"
+  default     = "10.0.0.0/16"
   type        = string
 }
 
-variable "cluster_version" {
-  description = "Kubernetes version to use for the EKS cluster."
-  type        = string
-  default     = "1.14"
+variable "private_subnets_cidrs" {
+  description = "The CIDRs of private subnets of the cloud VPC. The default values allow 4094 hosts per subnet"
+  default     = ["10.0.16.0/20", "10.0.32.0/20"]
+  type        = list(string)
 }
 
-variable "worker_groups" {
-  description = "The EKS worker groups. See https://github.com/terraform-aws-modules/terraform-aws-eks on the format of worker_groups"
-  type        = any
-  default     = []
+variable "public_subnets_cidrs" {
+  description = "The CIDRs of public subnets of the cloud VPC. The default values allow 4094 hosts per subnet"
+  default     = ["10.0.48.0/20", "10.0.64.0/20"]
+  type        = list(string)
 }
