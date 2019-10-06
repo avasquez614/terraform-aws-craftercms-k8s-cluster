@@ -42,7 +42,7 @@ module "eks" {
   subnet_ids           = module.vpc.vpc_private_subnets
   worker_groups        = [
     {
-      name                  = "k8s-support-workers-az1-v${local.k8s_version}"
+      name                  = "az1-k8s-support-workers-v${local.k8s_version}"
       subnets               = module.vpc.vpc_private_subnets[0]
       instance_type         = "t3a.small"
       asg_min_size          = 1
@@ -54,7 +54,7 @@ module "eks" {
       protect_from_scale_in = true
     },
     {
-      name                  = "k8s-support-workers-az2-v${local.k8s_version}"
+      name                  = "az2-k8s-support-workers-v${local.k8s_version}"
       subnets               = module.vpc.vpc_private_subnets[1]
       instance_type         = "t3a.small"
       asg_min_size          = 1
@@ -66,7 +66,7 @@ module "eks" {
       protect_from_scale_in = true
     },
     {
-      name                  = "authoring-workers-az1-v${local.k8s_version}"
+      name                  = "az1-authoring-workers-v${local.k8s_version}"
       subnets               = module.vpc.vpc_private_subnets[0]
       instance_type         = "t3a.xlarge"
       asg_min_size          = 1
@@ -78,7 +78,7 @@ module "eks" {
       protect_from_scale_in = true
     },
     {
-      name                  = "authoring-workers-az2-v${local.k8s_version}"
+      name                  = "az2-authoring-workers-v${local.k8s_version}"
       subnets               = module.vpc.vpc_private_subnets[1]
       instance_type         = "t3a.xlarge"
       asg_min_size          = 1
@@ -90,7 +90,7 @@ module "eks" {
       protect_from_scale_in = true
     },
     {
-      name                  = "delivery-workers-az1-v${local.k8s_version}"
+      name                  = "az1-delivery-workers-v${local.k8s_version}"
       subnets               = module.vpc.vpc_private_subnets[0]
       instance_type         = "t3a.medium"
       asg_min_size          = 1
@@ -102,7 +102,7 @@ module "eks" {
       protect_from_scale_in = true
     },
     {
-      name                  = "delivery-workers-az2-v${local.k8s_version}"
+      name                  = "az2-delivery-workers-v${local.k8s_version}"
       subnets               = module.vpc.vpc_private_subnets[1]
       instance_type         = "t3a.medium"
       asg_min_size          = 1
