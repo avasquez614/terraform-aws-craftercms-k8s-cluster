@@ -21,29 +21,114 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 locals {
-  region = "us-east-1"
-  azs = ["us-east-1a", "us-east-1b"]
+  region      = "us-east-1"
+  azs         = ["us-east-1a", "us-east-1b"]
+  k8s_version = "1.14"
+}
+
+module "vpc" {
+  source               = "./modules/vpc"
+  resource_name_prefix = var.resource_name_prefix
+  region               = local.region
+  azs                  = local.azs
 }
 
 module "eks" {
-  source = "./modules/eks-cluster"
-  region = local.region
-  azs    = local.azs
+  source               = "./modules/eks-cluster"
+  resource_name_prefix = var.resource_name_prefix
+  cluster_version      = local.k8s_version
+  region               = local.region
+  vpc_id               = module.vpc.vpc_id
+  subnet_ids           = module.vpc.vpc_private_subnets
+  worker_groups        = [
+    {
+      name                  = "k8s-support-workers-az1-v${local.k8s_version}"
+      subnets               = module.vpc.vpc_private_subnets[0]
+      instance_type         = "t3a.small"
+      asg_min_size          = 1
+      asg_desired_capacity  = 1
+      asg_max_size          = 3
+      root_volume_size      = 20
+      kubelet_extra_args    = "--node-labels=node-type=k8s-support"
+      autoscaling_enabled   = true
+      protect_from_scale_in = true
+    },
+    {
+      name                  = "k8s-support-workers-az2-v${local.k8s_version}"
+      subnets               = module.vpc.vpc_private_subnets[1]
+      instance_type         = "t3a.small"
+      asg_min_size          = 1
+      asg_desired_capacity  = 1
+      asg_max_size          = 3
+      root_volume_size      = 20
+      kubelet_extra_args    = "--node-labels=node-type=k8s-support"
+      autoscaling_enabled   = true
+      protect_from_scale_in = true
+    },
+    {
+      name                  = "authoring-workers-az1-v${local.k8s_version}"
+      subnets               = module.vpc.vpc_private_subnets[0]
+      instance_type         = "t3a.xlarge"
+      asg_min_size          = 1
+      asg_desired_capacity  = 1
+      asg_max_size          = 20
+      root_volume_size      = 20
+      kubelet_extra_args    = "--node-labels=node-type=authoring"
+      autoscaling_enabled   = true
+      protect_from_scale_in = true
+    },
+    {
+      name                  = "authoring-workers-az2-v${local.k8s_version}"
+      subnets               = module.vpc.vpc_private_subnets[1]
+      instance_type         = "t3a.xlarge"
+      asg_min_size          = 1
+      asg_desired_capacity  = 1
+      asg_max_size          = 20
+      root_volume_size      = 20
+      kubelet_extra_args    = "--node-labels=node-type=authoring"
+      autoscaling_enabled   = true
+      protect_from_scale_in = true
+    },
+    {
+      name                  = "delivery-workers-az1-v${local.k8s_version}"
+      subnets               = module.vpc.vpc_private_subnets[0]
+      instance_type         = "t3a.medium"
+      asg_min_size          = 1
+      asg_desired_capacity  = 1
+      asg_max_size          = 20
+      root_volume_size      = 20
+      kubelet_extra_args    = "--node-labels=node-type=delivery"
+      autoscaling_enabled   = true
+      protect_from_scale_in = true
+    },
+    {
+      name                  = "delivery-workers-az2-v${local.k8s_version}"
+      subnets               = module.vpc.vpc_private_subnets[1]
+      instance_type         = "t3a.medium"
+      asg_min_size          = 1
+      asg_desired_capacity  = 1
+      asg_max_size          = 20
+      root_volume_size      = 20
+      kubelet_extra_args    = "--node-labels=node-type=delivery"
+      autoscaling_enabled   = true
+      protect_from_scale_in = true
+    }
+  ]
 }
 
 module "es" {
   source     = "./modules/elasticsearch-domain"
   region     = local.region
-  vpc_id     = module.eks.vpc_id
-  subnet_ids = module.eks.vpc_private_subnets
+  vpc_id     = module.vpc.vpc_id
+  subnet_ids = module.vpc.vpc_private_subnets
 }
 
 module "db" {
   source          = "./modules/aurora-serverless-db"
   region          = local.region
   azs             = local.azs
-  vpc_id          = module.eks.vpc_id
-  subnet_ids      = module.eks.vpc_private_subnets
+  vpc_id          = module.vpc.vpc_id
+  subnet_ids      = module.vpc.vpc_private_subnets
   master_username = "example_user"
   master_password = "example_password"
 }
