@@ -34,15 +34,15 @@ data "aws_subnet" "subnet" {
 # Local Variables
 #------------------------------------------------------------------------
 locals {
-  rds_instance_name = "${var.resource_name_prefix}-${var.cluster_name}"
+  db_instance_name = "${var.resource_name_prefix}-${var.cluster_name}"
 }
 
 #------------------------------------------------------------------------
 # AWS RDS Security Group
 #------------------------------------------------------------------------
 resource "aws_security_group" "rds_sg" {
-  name        = "${local.rds_instance_name}-sg"
-  description = "Allows access to ${local.rds_instance_name}"
+  name        = "${local.db_instance_name}-sg"
+  description = "Allows access to ${local.db_instance_name}"
   vpc_id      = var.vpc_id
 
   ingress {
@@ -64,13 +64,13 @@ resource "aws_security_group" "rds_sg" {
 # AWS RDS DB
 #------------------------------------------------------------------------
 resource "aws_db_subnet_group" "db_subnet_group" {
-  name       = "${local.rds_instance_name}-subnet-group"
-  description = "DB Subnet Group for ${local.rds_instance_name}"
+  name       = "${local.db_instance_name}-subnet-group"
+  description = "DB Subnet Group for ${local.db_instance_name}"
   subnet_ids  = var.subnet_ids
 }
 
 resource "aws_rds_cluster" "db" {
-  cluster_identifier              = local.rds_instance_name
+  cluster_identifier              = local.db_instance_name
   availability_zones              = var.azs
   engine                          = "aurora"
   engine_mode                     = "serverless"
