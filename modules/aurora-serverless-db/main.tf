@@ -33,14 +33,14 @@ data "aws_subnet" "subnet" {
 # Local Variables
 #------------------------------------------------------------------------
 locals {
-  db_instance_name = "${var.resource_name_prefix}-${var.cluster_name}"
+  db_instance_name  = "${var.resource_name_prefix}-${var.cluster_name}"
 }
 
 #------------------------------------------------------------------------
 # AWS RDS Security Group
 #------------------------------------------------------------------------
 resource "aws_security_group" "db_sg" {
-  count       = var.security_group_id != "" ? 0 : 1
+  count       = var.create_security_group ? 1 : 0
   name        = "${local.db_instance_name}-sg"
   description = "Allows access to ${local.db_instance_name}"
   vpc_id      = var.vpc_id
@@ -64,7 +64,7 @@ resource "aws_security_group" "db_sg" {
 # AWS RDS DB
 #------------------------------------------------------------------------
 resource "aws_db_subnet_group" "db_subnet_group" {
-  count       = var.db_subnet_group_name != "" ? 0 : 1
+  count       = var.create_db_subnet_group ? 1 : 0
   name        = "${local.db_instance_name}-subnet-group"
   description = "DB Subnet Group for ${local.db_instance_name}"
   subnet_ids  = var.subnet_ids
@@ -82,8 +82,8 @@ resource "aws_rds_cluster" "db" {
   preferred_maintenance_window    = var.preferred_maintenance_window
   skip_final_snapshot             = var.skip_final_snapshot
   final_snapshot_identifier       = var.final_snapshot_identifier
-  db_subnet_group_name            = var.db_subnet_group_name != "" ? var.db_subnet_group_name : aws_db_subnet_group.db_subnet_group.0.name
-  vpc_security_group_ids          = [var.security_group_id != "" ? var.security_group_id : aws_security_group.db_sg.0.id]
+  db_subnet_group_name            = var.create_db_subnet_group  ? aws_db_subnet_group.db_subnet_group[0].name : var.db_subnet_group_name
+  vpc_security_group_ids          = [var.create_security_group ? aws_security_group.db_sg[0].id : var.security_group_id]
 
   scaling_configuration {
     auto_pause               = var.auto_pause

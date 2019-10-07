@@ -39,14 +39,26 @@ variable "subnet_ids" {
   type        = list(string)
 }
 
+variable "create_security_group" {
+  description = "If the security group used to access the DB cluster should be created automatically"
+  default     = true
+  type        = bool
+}
+
 variable "security_group_id" {
-  description = "The ID of the security group used to access the DB cluster. If not specified, one will be created automatically"
+  description = "The ID of the security group used to access the DB cluster"
   default     = ""
   type        = string
 }
 
+variable "create_db_subnet_group" {
+  description = "If the DB subnet group to place the DB cluster in should be created automatically"
+  default     = true
+  type        = bool
+}
+
 variable "db_subnet_group_name" {
-  description = "The name of the DB subnet group to place the DB cluster in. If not specified, one will be created automatically"
+  description = "The name of the DB subnet group to place the DB cluster in"
   default     = ""
   type        = string
 }

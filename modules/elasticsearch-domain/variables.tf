@@ -34,8 +34,14 @@ variable "subnet_ids" {
   type        = list(string)
 }
 
+variable "create_security_group" {
+  description = "If the security group used to access the DB cluster should be created automatically"
+  default     = true
+  type        = bool
+}
+
 variable "security_group_id" {
-  description = "The ID of the security group used to access the Elasticsearch domain. If not specified, one will be created automatically"
+  description = "The ID of the security group used to access the Elasticsearch domain"
   default     = ""
   type        = string
 }
