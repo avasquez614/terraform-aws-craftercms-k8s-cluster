@@ -15,11 +15,10 @@
 
 terraform {
   required_version = ">= 0.12.0"
-}
 
-provider "aws" {
-  version = ">= 2.11"
-  region  = var.region
+  required_providers {
+    aws = ">= 2.31.0"
+  }
 }
 
 data "aws_caller_identity" "current" {
