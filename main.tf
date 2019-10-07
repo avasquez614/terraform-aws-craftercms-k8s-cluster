@@ -117,18 +117,20 @@ module "eks" {
 }
 
 module "es" {
-  source     = "./modules/elasticsearch-domain"
-  region     = local.region
-  vpc_id     = module.vpc.vpc_id
-  subnet_ids = module.vpc.vpc_private_subnets
+  source               = "./modules/elasticsearch-domain"
+  resource_name_prefix = var.resource_name_prefix
+  region               = local.region
+  vpc_id               = module.vpc.vpc_id
+  subnet_ids           = module.vpc.vpc_private_subnets
 }
 
 module "db" {
-  source          = "./modules/aurora-serverless-db"
-  region          = local.region
-  azs             = local.azs
-  vpc_id          = module.vpc.vpc_id
-  subnet_ids      = module.vpc.vpc_private_subnets
-  master_username = "example_user"
-  master_password = "example_password"
+  source               = "./modules/aurora-serverless-db"
+  resource_name_prefix = var.resource_name_prefix
+  region               = local.region
+  azs                  = local.azs
+  vpc_id               = module.vpc.vpc_id
+  subnet_ids           = module.vpc.vpc_private_subnets
+  master_username      = "example_user"
+  master_password      = "example_password"
 }
