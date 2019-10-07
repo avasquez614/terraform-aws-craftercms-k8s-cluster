@@ -41,6 +41,7 @@ locals {
 # Elasticsearch Security Group
 #------------------------------------------------------------------------
 resource "aws_security_group" "es_sg" {
+  count       = var.security_group_id != "" ? 0 : 1
   name        = "${local.es_domain_name}-es-sg"
   description = "Allows access to ${local.es_domain_name}"
   vpc_id      = var.vpc_id
@@ -79,7 +80,7 @@ resource "aws_elasticsearch_domain" "es" {
 
   vpc_options {
     subnet_ids         = slice(var.subnet_ids, 0, var.azs_count)
-    security_group_ids = [aws_security_group.es_sg.id]
+    security_group_ids = [var.security_group_id != "" ? var.security_group_id : aws_security_group.es_sg.id]
   }
 
   ebs_options {

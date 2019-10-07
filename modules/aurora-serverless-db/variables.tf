@@ -39,6 +39,18 @@ variable "subnet_ids" {
   type        = list(string)
 }
 
+variable "security_group_id" {
+  description = "The ID of the security group used to access the DB cluster. If not specified, one will be created automatically"
+  default     = ""
+  type        = string
+}
+
+variable "db_subnet_group_name" {
+  description = "The name of the DB subnet group to place the DB cluster in. If not specified, one will be created automatically"
+  default     = ""
+  type        = string
+}
+
 variable "cluster_name" {
   description = "The name of the Aurora serverless cluster (which will be prepended with the resource_name_prefix)"
   default     = "db"

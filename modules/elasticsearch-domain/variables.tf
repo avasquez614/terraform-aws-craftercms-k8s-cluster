@@ -25,13 +25,19 @@ variable "region" {
 }
 
 variable "vpc_id" {
-  description = "The ID of the VPC where the Elasticsearch cluster will be created"
+  description = "The ID of the VPC where the Elasticsearch domain will be created"
   type        = string
 }
 
 variable "subnet_ids" {
-  description = "The IDs of the subnets where the Elasticsearch cluster will be created"
+  description = "The IDs of the subnets where the Elasticsearch domain will be created"
   type        = list(string)
+}
+
+variable "security_group_id" {
+  description = "The ID of the security group used to access the Elasticsearch domain. If not specified, one will be created automatically"
+  default     = ""
+  type        = string
 }
 
 variable "es_instance_name" {
@@ -53,7 +59,7 @@ variable "instance_type" {
 }
 
 variable "instance_count" {
-  description = "The instance count of the Elasticsearch cluster. Should be a multiple of azs_count"
+  description = "The instance count of the Elasticsearch cluster. Should be a multiple of the subnet_ids"
   default     = 2
   type        = number
 }
@@ -72,6 +78,6 @@ variable "ebs_volume_type" {
 
 variable "ebs_volume_size" {
   description = "The size of EBS volumes attached to data nodes (in GB)"
-  default     = 20
+  default     = 25
   type        = number
 }

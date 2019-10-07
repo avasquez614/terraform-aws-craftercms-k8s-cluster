@@ -43,7 +43,7 @@ module "eks" {
   worker_groups        = [
     {
       name                  = "az1-k8s-support-workers-v${local.k8s_version}"
-      subnets               = module.vpc.vpc_private_subnets[0]
+      subnets               = [module.vpc.vpc_private_subnets[0]]
       instance_type         = "t3a.small"
       asg_min_size          = 1
       asg_desired_capacity  = 1
@@ -55,7 +55,7 @@ module "eks" {
     },
     {
       name                  = "az2-k8s-support-workers-v${local.k8s_version}"
-      subnets               = module.vpc.vpc_private_subnets[1]
+      subnets               = [module.vpc.vpc_private_subnets[1]]
       instance_type         = "t3a.small"
       asg_min_size          = 1
       asg_desired_capacity  = 1
@@ -67,7 +67,7 @@ module "eks" {
     },
     {
       name                  = "az1-authoring-workers-v${local.k8s_version}"
-      subnets               = module.vpc.vpc_private_subnets[0]
+      subnets               = [module.vpc.vpc_private_subnets[0]]
       instance_type         = "t3a.xlarge"
       asg_min_size          = 1
       asg_desired_capacity  = 1
@@ -79,7 +79,7 @@ module "eks" {
     },
     {
       name                  = "az2-authoring-workers-v${local.k8s_version}"
-      subnets               = module.vpc.vpc_private_subnets[1]
+      subnets               = [module.vpc.vpc_private_subnets[1]]
       instance_type         = "t3a.xlarge"
       asg_min_size          = 1
       asg_desired_capacity  = 1
@@ -91,7 +91,7 @@ module "eks" {
     },
     {
       name                  = "az1-delivery-workers-v${local.k8s_version}"
-      subnets               = module.vpc.vpc_private_subnets[0]
+      subnets               = [module.vpc.vpc_private_subnets[0]]
       instance_type         = "t3a.medium"
       asg_min_size          = 1
       asg_desired_capacity  = 1
@@ -103,7 +103,7 @@ module "eks" {
     },
     {
       name                  = "az2-delivery-workers-v${local.k8s_version}"
-      subnets               = module.vpc.vpc_private_subnets[1]
+      subnets               = [module.vpc.vpc_private_subnets[1]]
       instance_type         = "t3a.medium"
       asg_min_size          = 1
       asg_desired_capacity  = 1
