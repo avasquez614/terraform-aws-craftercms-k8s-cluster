@@ -26,6 +26,15 @@ locals {
   k8s_version = "1.14"
 }
 
+terraform {
+  required_version = ">= 0.12.0"
+}
+
+provider "aws" {
+  version = ">= 2.11"
+  region  = local.region
+}
+
 module "vpc" {
   source               = "./modules/vpc"
   resource_name_prefix = var.resource_name_prefix

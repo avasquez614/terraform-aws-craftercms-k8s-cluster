@@ -79,7 +79,7 @@ resource "aws_elasticsearch_domain" "es" {
 
   vpc_options {
     subnet_ids         = slice(var.subnet_ids, 0, var.azs_count)
-    security_group_ids = [var.security_group_id != "" ? var.security_group_id : aws_security_group.es_sg.id]
+    security_group_ids = [var.security_group_id != "" ? var.security_group_id : aws_security_group.es_sg.0.id]
   }
 
   ebs_options {

@@ -70,7 +70,7 @@ resource "aws_db_subnet_group" "db_subnet_group" {
   subnet_ids  = var.subnet_ids
 }
 
-resource "aws_rds_cluster" "db_cluster" {
+resource "aws_rds_cluster" "db" {
   cluster_identifier              = local.db_instance_name
   availability_zones              = var.azs
   engine                          = "aurora"
@@ -82,8 +82,8 @@ resource "aws_rds_cluster" "db_cluster" {
   preferred_maintenance_window    = var.preferred_maintenance_window
   skip_final_snapshot             = var.skip_final_snapshot
   final_snapshot_identifier       = var.final_snapshot_identifier
-  db_subnet_group_name            = var.db_subnet_group_name != "" ? var.db_subnet_group_name : aws_db_subnet_group.db_subnet_group.name
-  vpc_security_group_ids          = [var.security_group_id != "" ? var.security_group_id : aws_security_group.db_sg.id]
+  db_subnet_group_name            = var.db_subnet_group_name != "" ? var.db_subnet_group_name : aws_db_subnet_group.db_subnet_group.0.name
+  vpc_security_group_ids          = [var.security_group_id != "" ? var.security_group_id : aws_security_group.db_sg.0.id]
 
   scaling_configuration {
     auto_pause               = var.auto_pause
